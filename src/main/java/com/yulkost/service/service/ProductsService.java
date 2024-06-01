@@ -5,6 +5,7 @@ import com.yulkost.service.model.Products;
 import com.yulkost.service.repository.ProductStockRepository;
 import com.yulkost.service.repository.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ProductsService {
     }
 
     public Iterable<Products> findAll() {
-        return productsRepository.findAll();
+        return productsRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public void saveAll(List<Products> products) {
@@ -44,8 +45,7 @@ public class ProductsService {
             // Обновляем продукт с ссылкой на ProductStock
             product.setProductStock(productStock);
             productsRepository.save(product);
-        };
-
+        }
     }
 
     public Products findById(Long id) {

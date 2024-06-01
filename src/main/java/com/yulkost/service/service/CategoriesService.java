@@ -8,6 +8,7 @@ import com.yulkost.service.dto.mapper.CategoriesDtoToMenuMapper;
 import com.yulkost.service.dto.mapper.CategoriesDtoToPageMapper;
 import com.yulkost.service.model.Categories;
 import com.yulkost.service.repository.CategoriesRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,28 +33,28 @@ public class CategoriesService {
 }
     public List<CategoriesDtoToPage> findAll(){
 
-        return categoriesRepository.findAll()
+        return categoriesRepository.findAll(Sort.by(Sort.Direction.ASC, "categoriesName"))
                 .stream()
                 .map(categoriesDtoToPageMapper)
         .collect(Collectors.toList());
     }
     public List<CategoriesDtoToMenu> findAllForMenu(){
 
-        return categoriesRepository.findAllByParentCategory(null)
+        return categoriesRepository.findAllByParentCategory(null,Sort.by(Sort.Direction.ASC, "categoriesName"))
                 .stream()
                 .map(categoriesDtoToMenuMapper)
         .collect(Collectors.toList());
     }
     public List<CategoriesDtoToItemsEdit> findAllToItemsEdit(){
 
-        return categoriesRepository.findAll()
+        return categoriesRepository.findAll(Sort.by(Sort.Direction.ASC, "categoriesName"))
                 .stream()
                 .map(categoriesDtoToItemsEditMapper)
                 .collect(Collectors.toList());
     }
     public List<Categories> findAllCategories(){
 
-        return categoriesRepository.findAll();
+        return categoriesRepository.findAll(Sort.by(Sort.Direction.ASC, "categoriesName"));
     }
 
     public void saveAll(List<Categories> categories) {

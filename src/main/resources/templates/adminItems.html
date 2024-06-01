@@ -14,9 +14,20 @@
                 <button class="btn-oko" onclick="saveChanges()">Изменить</button>
                 <a href="/admin" class="btnchange">Выйти</a>
                 <select id="sortBy" onchange="sortItems()">
-                    <option value="id">Айди</option>
                     <option value="categories">Категория</option>
                     <option value="alf">Алфавит</option>
+                </select>
+                <select id="categoryFilter" onchange="displayTable()">
+                </select>
+                <select id="viewFilter" onchange="displayTable()">
+                    <option value="true">Виден</option>
+                    <option value="false">Не виден</option>
+                    <option selected value="null">Не выбрано</option>
+                </select>
+                <select id="typeFilter" onchange="displayTable()">
+                    <option value="true">Кухня</option>
+                    <option value="false">Бар</option>
+                    <option selected value="null">Не выбрано</option>
                 </select>
             </div>
         </div>

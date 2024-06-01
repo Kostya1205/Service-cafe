@@ -40,10 +40,35 @@ function sortItems(){
 }
 function displayTable() {
     const tableBody = document.getElementById('table');
-    tableBody.innerText = '';
+    tableBody.innerHTML = ''; // Clear the existing table content
     createTableTitle();
 
-    items.forEach(function(item) {
+    // Get the selected filter values
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const viewFilter = document.getElementById('viewFilter').value;
+    const typeFilter = document.getElementById('typeFilter').value;
+
+    // Filter items based on selected filters
+    const filteredItems = items.filter(function(item) {
+        let categoryMatch = true;
+        let viewMatch = true;
+        let typeMatch = true;
+
+        if (categoryFilter !== 'null') {
+            categoryMatch = (item.categories.categoriesName === categoryFilter);
+        }
+        if (viewFilter !== 'null') {
+            viewMatch = (item.view === (viewFilter === 'true'));
+        }
+        if (typeFilter !== 'null') {
+            typeMatch = (item.typeOfItem === (typeFilter === 'true' ));
+        }
+
+        return categoryMatch && viewMatch && typeMatch;
+    });
+
+    // Append filtered items to the table
+    filteredItems.forEach(function(item) {
         tableBody.appendChild(createTableRow(item));
     });
 }
@@ -87,7 +112,7 @@ function createTableRow(item) {
     let deleteButtonTd = document.createElement('td');
     let deleteButton = document.createElement('button');
     deleteButton.className = 'btnchange';
-    deleteButton.value = 'Изменить';
+    deleteButton.value = 'Удалить';
     deleteButton.onclick = function() {
         deleteItem(item.id);
     };
@@ -212,6 +237,7 @@ function getCategories() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             category = JSON.parse(xhr.responseText);
+            addOptionsToCategoryFilter();
             displayTable();
         }
     };
@@ -246,8 +272,7 @@ function deleteItem(id) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                items.filter(item => item.id !== id)
-                displayTable();
+                getItems();
                 showMessage('Успешно' + xhr.responseText, 'Green');
             } else {
                 showMessage('Товар имеет внешние связи' + xhr.responseText, 'red');
@@ -256,4 +281,18 @@ function deleteItem(id) {
         }
     };
     xhr.send();
+}
+function addOptionsToCategoryFilter(){
+    let select = document.getElementById('categoryFilter');
+    category.forEach(function(item) {
+        let option = document.createElement('option');
+        option.value = item.categoriesName;
+        option.text = item.categoriesName;
+        select.appendChild(option);
+    });
+    let option = document.createElement('option');
+    option.value = 'null';
+    option.text = 'Не выбрано';
+    option.selected = true;
+    select.appendChild(option);
 }
