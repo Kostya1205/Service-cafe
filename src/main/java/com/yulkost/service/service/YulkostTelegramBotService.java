@@ -18,13 +18,17 @@ public class YulkostTelegramBotService {
     }
 
     public void SendOrderToUser(Orders order){
-        StringBuilder orderInfo = new StringBuilder();
-        orderInfo.append("Заказ № ").append(order.getId()).append("\n");
-        orderInfo.append("Стол № ").append(order.getNumberOfTable()).append("\n");
-        orderInfo.append(infoAboutOrderItems(order.getOrderItems()));
-        System.out.println(orderInfo);
-        for (User user : order.getShift().getUsers())
-            telegramBot.sendMessage(user.getChatId(),orderInfo.toString());
+        try {
+            StringBuilder orderInfo = new StringBuilder();
+            orderInfo.append("Заказ № ").append(order.getId()).append("\n");
+            orderInfo.append("Стол № ").append(order.getNumberOfTable()).append("\n");
+            orderInfo.append(infoAboutOrderItems(order.getOrderItems()));
+            System.out.println(orderInfo);
+            for (User user : order.getShift().getUsers())
+                telegramBot.sendMessage(user.getChatId(), orderInfo.toString());
+        }catch (Exception exception){
+            System.out.println(exception.getMessage());
+        }
     }
 
     private StringBuilder infoAboutOrderItems(List<OrderItems> orderItems){
